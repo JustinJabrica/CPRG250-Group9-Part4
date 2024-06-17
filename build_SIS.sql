@@ -16,3 +16,15 @@ alter session set NLS_LANGUAGE = ENGLISH;
 
 SET ECHO ON
 SET FEEDBACK ON
+
+CREATE TABLE sis_course
+(
+    course_code CHAR(7);
+    name VARCHAR2(100) NOT NULL;
+    num_of_credits NUMBER(2,1) NOT NULL;
+    prereq_course_code CHAR(7);
+      CONSTRAINT customers_customer#_pk PRIMARY KEY(customer#),
+      CONSTRAINT customers_region_ck
+                CHECK (region IN ('N', 'NW', 'NE', 'S', 'SE', 'SW', 'W', 'E'))
+    
+);
