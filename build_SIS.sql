@@ -29,3 +29,18 @@ CREATE TABLE sis_course
       CONSTRAINT sis_course_prereq_course_code_fk FOREIGN KEY (prereq_course_code)
           REFERENCES (sis_course (course_code));    
 );
+
+CREATE TABLE sis_courses_within_cred
+(
+    credential# NUMBER;
+    course_code CHAR(7);
+    type_flag NUMBER(1) NOT NULL;
+        CONSTRAINT sis_courses_within_cred_credential#_pk PRIMARY KEY(credential#),
+        CONSTRAINT sis_courses_within_cred_credential#_fk FOREIGN KEY(credential#)
+            REFERENCES (sis_Credential (credential#)),
+        CONSTRAINT sis_courses_within_cred_course_code_pk PRIMARY KEY(course_code),
+        CONSTRAINT sis_courses_within_cred_course_code_fk FOREIGN KEY(course_code)
+            REFERENCES ( sis_course (course_code)),
+        CONSTRAINT  sis_courses_within_cred_type_flag_format
+            CHECK (REGEXP_LIKE(type_flag, '^[0-1]')),    
+);
