@@ -42,5 +42,5 @@ CREATE TABLE sis_courses_within_cred
         CONSTRAINT sis_courses_within_cred_course_code_fk FOREIGN KEY(course_code)
             REFERENCES ( sis_course (course_code)),
         CONSTRAINT  sis_courses_within_cred_type_flag_format
-            CHECK (REGEXP_LIKE(type_flag, '^[0-1]')),    
+            CHECK (type_flag IN (0, 1));    
 );
