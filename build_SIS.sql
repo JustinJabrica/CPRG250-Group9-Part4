@@ -30,4 +30,3 @@ CREATE TABLE sis_course
           REFERENCES (sis_course (course_code));    
 );
 
-CREATE TABLE sis_courses
