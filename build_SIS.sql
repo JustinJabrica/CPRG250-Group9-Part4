@@ -1,4 +1,4 @@
-DROP TABLE sis_Credential CASCADE CONSTRAINTS;
+DROP TABLE sis_credential CASCADE CONSTRAINTS;
 DROP TABLE sis_courses_within_cred CASCADE CONSTRAINTS;
 DROP TABLE sis_course CASCADE CONSTRAINTS;
 DROP TABLE sis_scheduled_course CASCADE CONSTRAINTS;
@@ -6,7 +6,7 @@ DROP TABLE sis_instructor_course CASCADE CONSTRAINTS;
 DROP TABLE sis_instructor CASCADE CONSTRAINTS;
 DROP TABLE sis_student CASCADE CONSTRAINTS;
 DROP TABLE sis_student_course_record CASCADE CONSTRAINTS;
-DROP TABLE sis_student_Student_Credential CASCADE CONSTRAINTS;
+DROP TABLE sis_student_credential CASCADE CONSTRAINTS;
 
 
 rem set date format for 11g
@@ -77,5 +77,44 @@ ADD CONSTRAINT sis_scheduled_course_course_code_fk FOREIGN KEY (course_code)
 
 ALTER TABLE sis_scheduled_course
 ADD CONSTRAINT sis_scheduled_course_section_code_ck CHECK (REGEXP_LIKE(section_code, '[A-Z]'));
+
+
+/* credential and student_credential */
+CREATE TABLE sis_credential
+(
+    credential# NUMBER,
+    school_name VARCHAR2(50) NOT NULL,
+    name VARCHAR2(50) NOT NULL,
+    type VARCHAR2(2) NOT NULL
+);
+
+ALTER TABLE sis_credential
+ADD CONSTRAINT sis_credential_credential#_pk PRIMARY KEY(credential#);
+
+ALTER TABLE sis_credential
+ADD CONSTRAINT sis_credential_type_ck CHECK (type IN ('MI', 'FT', 'CT', 'DP', 'AD', 'D'));
+
+
+CREATE TABLE sis_student_credential
+(
+    studentid NUMBER,
+    credential# NUMBER,
+    startdate DATE NOT NULL,
+    completion_date DATE,
+    credential_status CHAR(1) NOT NULL,
+    gpa NUMBER(3,2) NOT NULL
+);
+
+ALTER TABLE sis_student_credential
+ADD CONSTRAINT sis_student_credential_studentid_credential#_pk PRIMARY KEY (studentid, credential#);
+
+ALTER TABLE sis_student_credential
+ADD CONSTRAINT sis_student_credential_studentid_fk FOREIGN KEY (studentid) REFERENCES sis_student(studentid);
+
+ALTER TABLE sis_student_credential
+ADD CONSTRAINT sis_student_credential_credential#_fk FOREIGN KEY (credential#) REFERENCES sis_credential(credential#);
+
+ALTER TABLE sis_student_credential
+ADD CONSTRAINT sis_student_credential_credential_status_ck CHECK (credential_status IN ('A', 'G', 'E'));
 
 COMMIT;
