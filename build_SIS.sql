@@ -23,11 +23,11 @@ CREATE TABLE sis_course
     name VARCHAR2(100) NOT NULL,
     num_of_credits NUMBER(2,1) NOT NULL,
     prereq_course_code CHAR(7),
-      CONSTRAINT sis_course_course_code_pk PRIMARY KEY(course_code),
-      CONSTRAINT sis_course_course_code_ck
-          CHECK (REGEXP_LIKE(course_code, '[A-Z]{4}[0-9]{3}')),
-      CONSTRAINT sis_course_prereq_course_code_fk FOREIGN KEY (prereq_course_code)
-          REFERENCES (sis_course (course_code));    
+    CONSTRAINT sis_course_course_code_pk PRIMARY KEY(course_code),
+    CONSTRAINT sis_course_course_code_ck
+        CHECK (REGEXP_LIKE(course_code, '[A-Z]{4}[0-9]{3}')),
+    CONSTRAINT sis_course_prereq_course_code_fk FOREIGN KEY (prereq_course_code)
+        REFERENCES sis_course (course_code)
 );
 
 CREATE TABLE sis_courses_within_cred
