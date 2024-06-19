@@ -21,7 +21,7 @@ CREATE TABLE sis_course
 (
     course_code CHAR(7),
     name VARCHAR2(100) NOT NULL,
-    num_of_credits NUMBER(2,1) NOT NULL;,
+    num_of_credits NUMBER(2,1) NOT NULL,
     prereq_course_code CHAR(7),
       CONSTRAINT sis_course_course_code_pk PRIMARY KEY(course_code),
       CONSTRAINT sis_course_course_code_ck
