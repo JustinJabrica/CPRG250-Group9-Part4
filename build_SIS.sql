@@ -54,7 +54,7 @@ CREATE TABLE sis_scheduled_course
         CONSTRAINT sis_scheduled_course_CRN_pk PRIMARY KEY (CRN, semester_code),
         CONSTRAINT sis_scheduled_course_semester_code_ck
             CHECK (REGEXP_LIKE(semester_code, '[A-Z]{4}[0-9]{3}')),    
-        CONSTRAINT sis_scheduled_course_course_code_fk FOREIGN KEY (CRN)
+        CONSTRAINT sis_scheduled_course_course_code_fk FOREIGN KEY (course_code)
             REFERENCES sis_course (course_code),
         CONSTRAINT sis_scheduled_course_section_code_ck
             CHECK (REGEXP_LIKE(section_code, '[A-Z]'))
