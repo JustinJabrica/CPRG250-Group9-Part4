@@ -64,13 +64,13 @@ CREATE TABLE sis_scheduled_course
 CREATE TABLE sis_instructor
 (
     instructorid NUMBER();
-    firstname NVARCHAR2(50) NOT NULL;
-    lastname NVARCHAR2(50) NOT NULL;
-    address NVARCHAR2(100) NOT NULL;
-    city NVARCHAR2(40) NOT NULL;
-    prov NCHAR(2) NOT NULL;
-    postal_code NCHAR(6) NOT NULL;
-    phonenumber NCHAR(12) NOT NULL;
+    firstname VARCHAR2(50) NOT NULL;
+    lastname VARCHAR2(50) NOT NULL;
+    address VARCHAR2(100) NOT NULL;
+    city VARCHAR2(40) NOT NULL;
+    prov CHAR(2) NOT NULL;
+    postal_code CHAR(6) NOT NULL;
+    phonenumber CHAR(12) NOT NULL;
     email NVCHAR2(100) NOT NULL;
         CONSTRAINT sis_instructor_instructorid_pk PRIMARY KEY (instructorid),
         CONSTRAINT sis_instructor_prov_ck
@@ -87,6 +87,6 @@ CREATE TABLE sis_instructor
 CREATE TABLE sis_instructor_course
 (
     CRN NUMBER(5);
-    semester_code NCHAR(7);
+    semester_code CHAR(7);
     instructorid NUMBER();
 )
