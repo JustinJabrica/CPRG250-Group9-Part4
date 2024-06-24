@@ -105,14 +105,14 @@ ADD CONSTRAINT sis_instructor_email_ck CHECK (REGEXP_LIKE(email, '[A-Za-z0-9._%+
 
 CREATE TABLE sis_scheduled_course
 (
-    CRN NUMBER(5),
+    crn NUMBER(5),
     semester_code CHAR(7),
     course_code CHAR(7) NOT NULL,
     section_code CHAR(1) NOT NULL
 );
 
 ALTER TABLE sis_scheduled_course
-ADD CONSTRAINT sis_scheduled_course_CRN_semester_code_pk PRIMARY KEY (CRN, semester_code);
+ADD CONSTRAINT sis_scheduled_course_crn_semester_code_pk PRIMARY KEY (crn, semester_code);
 
 ALTER TABLE sis_scheduled_course
 ADD CONSTRAINT sis_scheduled_course_semester_code_ck CHECK (REGEXP_LIKE(semester_code, '[A-Z]{4}[0-9]{3}'));
@@ -173,16 +173,16 @@ ADD CONSTRAINT sis_student_credential_credential_status_ck CHECK (credential_sta
 
 CREATE TABLE sis_instructor_course 
 (
-    CRN NUMBER(5),
+    crn NUMBER(5),
     semester_code CHAR(7),
     instructorid NUMBER
 );
 
 ALTER TABLE sis_instructor_course
-ADD CONSTRAINT sis_instructor_course_crn_semester_code_instructorid_pk PRIMARY KEY (CRN, semester_code, instructorid);
+ADD CONSTRAINT sis_instructor_course_crn_semester_code_instructorid_pk PRIMARY KEY (crn, semester_code, instructorid);
 
 ALTER TABLE sis_instructor_course
-ADD CONSTRAINT sis_instructor_course_crn_fk FOREIGN KEY (CRN) REFERENCES sis_scheduled_course(CRN);
+ADD CONSTRAINT sis_instructor_course_crn_fk FOREIGN KEY (crn) REFERENCES sis_scheduled_course(crn);
 
 ALTER TABLE sis_instructor_course
 ADD CONSTRAINT sis_instructor_course_semester_code_fk FOREIGN KEY(semester_code) REFERENCES sis_scheduled_course(semester_code);
