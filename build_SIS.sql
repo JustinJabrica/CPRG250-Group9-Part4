@@ -167,4 +167,56 @@ ADD CONSTRAINT sis_instructor_course_semester_code_fk FOREIGN KEY(semester_code)
 ALTER TABLE sis_instructor_course
 ADD CONSTRAINT sis_instructor_course_instructor_fk FOREIGN KEY (instructorid) REFERENCES sis_instructor(instructorid);
 
+CREATE TABLE sis_student_course_record
+(
+    crn NUMBER(5),
+    semester_code CHAR(7),
+    studentid NUMBER,
+    credential# NUMBER NOT NULL,
+    course_code CHAR(7) NOT NULL,
+    letter_grade VARCHAR2(2)
+);
+ 
+ALTER TABLE sis_student_course_record
+ADD CONSTRAINT sis_student_course_record_crn_semester_code_studentid_pk PRIMARY KEY (crn, semester_code, studentid);
+ 
+ALTER TABLE sis_student_course_record
+ADD CONSTRAINT sis_student_course_record_crn_fk FOREIGN KEY (crn) REFERENCES sis_scheduled_course(crn);
+ 
+ALTER TABLE sis_student_course_record
+ADD CONSTRAINT sis_student_course_record_studentid_fk FOREIGN KEY (studentid) REFERENCES sis_student(studentid);
+ 
+ALTER TABLE sis_student_course_record
+ADD CONSTRAINT sis_student_course_record_credential#_fk FOREIGN KEY (credential#) REFERENCES sis_credential(credential#);
+
+ALTER TABLE sis_student_course_record
+ADD CONSTRAINT sis_student_course_record_semester_code_fk FOREIGN KEY (semester_code) REFERENCES sis_scheduled_course(semester_code);
+ 
+ALTER TABLE sis_student_course_record
+ADD CONSTRAINT sis_student_course_record_letter_grade_ck CHECK (letter_grade IN ('A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D',  'D-', 'F', 'i'));
+
+
+CREATE TABLE sis_student
+(
+    studentid NUMBER,
+    firstname VARCHAR2(50) NOT NULL,
+    lastname VARCHAR2(50) NOT NULL,
+    status VARCHAR2(2) NOT NULL,
+    status_date DATE NOT NULL,
+    phone CHAR(12) NOT NULL,
+    email VARCHAR2(100) NOT NULL
+);
+ 
+ALTER TABLE sis_student
+ADD CONSTRAINT sis_student_studentid_pk PRIMARY KEY (studentID);
+ 
+ALTER TABLE sis_student
+ADD CONSTRAINT sis_student_status_ck CHECK (status IN ('A', 'AP', 'S', 'E'));
+ 
+ALTER TABLE sis_student
+ADD CONSTRAINT sis_student_phone_ck CHECK (REGEXP_LIKE(phone, '[0-9]{3}\.[0-9]{3}\.[0-9]{4}'));
+ 
+ALTER TABLE sis_student
+ADD CONSTRAINT sis_student_email_ck CHECK (REGEXP_LIKE(email, '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'));
+
 COMMIT;
