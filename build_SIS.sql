@@ -35,6 +35,73 @@ ALTER TABLE sis_course
 ADD CONSTRAINT sis_course_prereq_course_code_fk FOREIGN KEY (prereq_course_code)
     REFERENCES sis_course (course_code);
 
+CREATE TABLE sis_credential
+(
+    credential# NUMBER,
+    school_name VARCHAR2(50) NOT NULL,
+    name VARCHAR2(50) NOT NULL,
+    type VARCHAR2(2) NOT NULL
+);
+
+ALTER TABLE sis_credential
+ADD CONSTRAINT sis_credential_credential#_pk PRIMARY KEY(credential#);
+
+ALTER TABLE sis_credential
+ADD CONSTRAINT sis_credential_type_ck CHECK (type IN ('MI', 'FT', 'CT', 'DP', 'AD', 'D'));
+
+
+CREATE TABLE sis_student
+(
+    studentid NUMBER,
+    firstname VARCHAR2(50) NOT NULL,
+    lastname VARCHAR2(50) NOT NULL,
+    status VARCHAR2(2) NOT NULL,
+    status_date DATE NOT NULL,
+    phone CHAR(12) NOT NULL,
+    email VARCHAR2(100) NOT NULL
+);
+ 
+ALTER TABLE sis_student
+ADD CONSTRAINT sis_student_studentid_pk PRIMARY KEY (studentID);
+ 
+ALTER TABLE sis_student
+ADD CONSTRAINT sis_student_status_ck CHECK (status IN ('A', 'AP', 'S', 'E'));
+ 
+ALTER TABLE sis_student
+ADD CONSTRAINT sis_student_phone_ck CHECK (REGEXP_LIKE(phone, '[0-9]{3}\.[0-9]{3}\.[0-9]{4}'));
+ 
+ALTER TABLE sis_student
+ADD CONSTRAINT sis_student_email_ck CHECK (REGEXP_LIKE(email, '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'));
+
+
+CREATE TABLE sis_instructor 
+(
+    instructorid NUMBER,
+    firstname VARCHAR2(50) NOT NULL,
+    lastname VARCHAR2(50) NOT NULL,
+    address VARCHAR2(100) NOT NULL,
+    city VARCHAR2(40) NOT NULL,
+    prov CHAR(2) NOT NULL,
+    postal_code CHAR(6) NOT NULL,
+    phonenumber CHAR(12) NOT NULL,
+    email VARCHAR2(100) NOT NULL
+);
+
+ALTER TABLE sis_instructor
+ADD CONSTRAINT sis_instructor_instructorid_pk PRIMARY KEY (instructorid);
+
+ALTER TABLE sis_instructor
+ADD CONSTRAINT sis_instructor_prov_ck CHECK (REGEXP_LIKE(prov, '[A-Z]{2}'));
+
+ALTER TABLE sis_instructor
+ADD CONSTRAINT sis_instructor_postal_code_ck CHECK (REGEXP_LIKE(postal_code, '[A-Z][0-9][A-Z][0-9][A-Z][0-9]'));
+
+ALTER TABLE sis_instructor
+ADD CONSTRAINT sis_instructor_phone_ck CHECK (REGEXP_LIKE(phonenumber, '[0-9]{3}\.[0-9]{3}\.[0-9]{4}'));
+
+ALTER TABLE sis_instructor
+ADD CONSTRAINT sis_instructor_email_ck CHECK (REGEXP_LIKE(email, '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'));
+
 
 CREATE TABLE sis_scheduled_course
 (
@@ -56,21 +123,6 @@ ADD CONSTRAINT sis_scheduled_course_course_code_fk FOREIGN KEY (course_code)
 
 ALTER TABLE sis_scheduled_course
 ADD CONSTRAINT sis_scheduled_course_section_code_ck CHECK (REGEXP_LIKE(section_code, '[A-Z]'));
-
-
-CREATE TABLE sis_credential
-(
-    credential# NUMBER,
-    school_name VARCHAR2(50) NOT NULL,
-    name VARCHAR2(50) NOT NULL,
-    type VARCHAR2(2) NOT NULL
-);
-
-ALTER TABLE sis_credential
-ADD CONSTRAINT sis_credential_credential#_pk PRIMARY KEY(credential#);
-
-ALTER TABLE sis_credential
-ADD CONSTRAINT sis_credential_type_ck CHECK (type IN ('MI', 'FT', 'CT', 'DP', 'AD', 'D'));
 
 
 CREATE TABLE sis_courses_within_cred
@@ -118,48 +170,19 @@ ALTER TABLE sis_student_credential
 ADD CONSTRAINT sis_student_credential_credential_status_ck CHECK (credential_status IN ('A', 'G', 'E'));
 
 
-/* instructor & instructor_course */
-CREATE TABLE sis_instructor 
-(
-    instructorid NUMBER,
-    firstname VARCHAR2(50) NOT NULL,
-    lastname VARCHAR2(50) NOT NULL,
-    address VARCHAR2(100) NOT NULL,
-    city VARCHAR2(40) NOT NULL,
-    prov CHAR(2) NOT NULL,
-    postal_code CHAR(6) NOT NULL,
-    phonenumber CHAR(12) NOT NULL,
-    email VARCHAR2(100) NOT NULL
-);
-
-ALTER TABLE sis_instructor
-ADD CONSTRAINT sis_instructor_instructorid_pk PRIMARY KEY (instructorid);
-
-ALTER TABLE sis_instructor
-ADD CONSTRAINT sis_instructor_prov_ck CHECK (REGEXP_LIKE(prov, '[A-Z]{2}'));
-
-ALTER TABLE sis_instructor
-ADD CONSTRAINT sis_instructor_postal_code_ck CHECK (REGEXP_LIKE(postal_code, '[A-Z][0-9][A-Z][0-9][A-Z][0-9]'));
-
-ALTER TABLE sis_instructor
-ADD CONSTRAINT sis_instructor_phone_ck CHECK (REGEXP_LIKE(phonenumber, '[0-9]{3}\.[0-9]{3}\.[0-9]{4}'));
-
-ALTER TABLE sis_instructor
-ADD CONSTRAINT sis_instructor_email_ck CHECK (REGEXP_LIKE(email, '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'));
-
 
 CREATE TABLE sis_instructor_course 
 (
-    crn NUMBER(5),
+    CRN NUMBER(5),
     semester_code CHAR(7),
     instructorid NUMBER
 );
 
 ALTER TABLE sis_instructor_course
-ADD CONSTRAINT sis_instructor_course_crn_semester_code_instructorid_pk PRIMARY KEY (crn, semester_code, instructorid);
+ADD CONSTRAINT sis_instructor_course_crn_semester_code_instructorid_pk PRIMARY KEY (CRN, semester_code, instructorid);
 
 ALTER TABLE sis_instructor_course
-ADD CONSTRAINT sis_instructor_course_crn_fk FOREIGN KEY (crn) REFERENCES sis_scheduled_course(crn);
+ADD CONSTRAINT sis_instructor_course_crn_fk FOREIGN KEY (CRN) REFERENCES sis_scheduled_course(CRN);
 
 ALTER TABLE sis_instructor_course
 ADD CONSTRAINT sis_instructor_course_semester_code_fk FOREIGN KEY(semester_code) REFERENCES sis_scheduled_course(semester_code);
@@ -196,27 +219,5 @@ ALTER TABLE sis_student_course_record
 ADD CONSTRAINT sis_student_course_record_letter_grade_ck CHECK (letter_grade IN ('A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D',  'D-', 'F', 'i'));
 
 
-CREATE TABLE sis_student
-(
-    studentid NUMBER,
-    firstname VARCHAR2(50) NOT NULL,
-    lastname VARCHAR2(50) NOT NULL,
-    status VARCHAR2(2) NOT NULL,
-    status_date DATE NOT NULL,
-    phone CHAR(12) NOT NULL,
-    email VARCHAR2(100) NOT NULL
-);
- 
-ALTER TABLE sis_student
-ADD CONSTRAINT sis_student_studentid_pk PRIMARY KEY (studentID);
- 
-ALTER TABLE sis_student
-ADD CONSTRAINT sis_student_status_ck CHECK (status IN ('A', 'AP', 'S', 'E'));
- 
-ALTER TABLE sis_student
-ADD CONSTRAINT sis_student_phone_ck CHECK (REGEXP_LIKE(phone, '[0-9]{3}\.[0-9]{3}\.[0-9]{4}'));
- 
-ALTER TABLE sis_student
-ADD CONSTRAINT sis_student_email_ck CHECK (REGEXP_LIKE(email, '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'));
 
 COMMIT;
