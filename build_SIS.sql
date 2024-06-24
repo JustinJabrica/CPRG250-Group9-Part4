@@ -14,9 +14,11 @@ alter session set NLS_DATE_FORMAT='dd-mon-yy';
 rem set language to english to avoid problems with non-english machines
 alter session set NLS_LANGUAGE = ENGLISH;
 
+
 SET ECHO ON
 SET FEEDBACK ON
 
+    
 CREATE TABLE sis_course
 (
     course_code CHAR(7),
@@ -34,6 +36,7 @@ ADD CONSTRAINT sis_course_course_code_ck CHECK (REGEXP_LIKE(course_code, '[A-Z]{
 ALTER TABLE sis_course
 ADD CONSTRAINT sis_course_prereq_course_code_fk FOREIGN KEY (prereq_course_code)
     REFERENCES sis_course (course_code);
+
 
 CREATE TABLE sis_credential
 (
@@ -170,7 +173,6 @@ ALTER TABLE sis_student_credential
 ADD CONSTRAINT sis_student_credential_credential_status_ck CHECK (credential_status IN ('A', 'G', 'E'));
 
 
-
 CREATE TABLE sis_instructor_course 
 (
     crn NUMBER(5),
@@ -182,13 +184,11 @@ ALTER TABLE sis_instructor_course
 ADD CONSTRAINT sis_instructor_course_crn_semester_code_instructorid_pk PRIMARY KEY (crn, semester_code, instructorid);
 
 ALTER TABLE sis_instructor_course
-ADD CONSTRAINT sis_instructor_course_crn_fk FOREIGN KEY (crn) REFERENCES sis_scheduled_course(crn);
-
-ALTER TABLE sis_instructor_course
-ADD CONSTRAINT sis_instructor_course_semester_code_fk FOREIGN KEY(semester_code) REFERENCES sis_scheduled_course(semester_code);
+ADD CONSTRAINT sis_instructor_course_crn_semester_code_fk FOREIGN KEY (crn, semester_code) REFERENCES sis_scheduled_course(crn, semester_code);
 
 ALTER TABLE sis_instructor_course
 ADD CONSTRAINT sis_instructor_course_instructor_fk FOREIGN KEY (instructorid) REFERENCES sis_instructor(instructorid);
+
 
 CREATE TABLE sis_student_course_record
 (
@@ -204,7 +204,7 @@ ALTER TABLE sis_student_course_record
 ADD CONSTRAINT sis_student_course_record_crn_semester_code_studentid_pk PRIMARY KEY (crn, semester_code, studentid);
  
 ALTER TABLE sis_student_course_record
-ADD CONSTRAINT sis_student_course_record_crn_fk FOREIGN KEY (crn) REFERENCES sis_scheduled_course(crn);
+ADD CONSTRAINT sis_student_course_record_crn_semester_code_fk FOREIGN KEY (crn, semester_code) REFERENCES sis_scheduled_course(crn, semester_code);
  
 ALTER TABLE sis_student_course_record
 ADD CONSTRAINT sis_student_course_record_studentid_fk FOREIGN KEY (studentid) REFERENCES sis_student(studentid);
@@ -213,11 +213,6 @@ ALTER TABLE sis_student_course_record
 ADD CONSTRAINT sis_student_course_record_credential#_fk FOREIGN KEY (credential#) REFERENCES sis_credential(credential#);
 
 ALTER TABLE sis_student_course_record
-ADD CONSTRAINT sis_student_course_record_semester_code_fk FOREIGN KEY (semester_code) REFERENCES sis_scheduled_course(semester_code);
- 
-ALTER TABLE sis_student_course_record
 ADD CONSTRAINT sis_student_course_record_letter_grade_ck CHECK (letter_grade IN ('A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D',  'D-', 'F', 'i'));
-
-
 
 COMMIT;
