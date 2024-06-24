@@ -35,27 +35,6 @@ ALTER TABLE sis_course
 ADD CONSTRAINT sis_course_prereq_course_code_fk FOREIGN KEY (prereq_course_code)
     REFERENCES sis_course (course_code);
 
-CREATE TABLE sis_courses_within_cred
-(
-    credential# NUMBER,
-    course_code CHAR(7),
-    type_flag NUMBER(1) NOT NULL
-);
-
-ALTER TABLE sis_courses_within_cred
-ADD CONSTRAINT sis_courses_within_cred_pk PRIMARY KEY(credential#, course_code);
-
-ALTER TABLE sis_courses_within_cred
-ADD CONSTRAINT sis_courses_within_cred_credential#_fk FOREIGN KEY(credential#)
-    REFERENCES sis_Credential (credential#);
-
-ALTER TABLE sis_courses_within_cred
-ADD CONSTRAINT sis_courses_within_cred_course_code_fk FOREIGN KEY(course_code)
-    REFERENCES sis_course (course_code);
-
-ALTER TABLE sis_courses_within_cred
-ADD CONSTRAINT sis_courses_within_cred_type_flag_ck CHECK (type_flag IN (0, 1));
-
 
 CREATE TABLE sis_scheduled_course
 (
@@ -79,7 +58,6 @@ ALTER TABLE sis_scheduled_course
 ADD CONSTRAINT sis_scheduled_course_section_code_ck CHECK (REGEXP_LIKE(section_code, '[A-Z]'));
 
 
-/* credential and student_credential */
 CREATE TABLE sis_credential
 (
     credential# NUMBER,
@@ -93,6 +71,28 @@ ADD CONSTRAINT sis_credential_credential#_pk PRIMARY KEY(credential#);
 
 ALTER TABLE sis_credential
 ADD CONSTRAINT sis_credential_type_ck CHECK (type IN ('MI', 'FT', 'CT', 'DP', 'AD', 'D'));
+
+
+CREATE TABLE sis_courses_within_cred
+(
+    credential# NUMBER,
+    course_code CHAR(7),
+    type_flag NUMBER(1) NOT NULL
+);
+
+ALTER TABLE sis_courses_within_cred
+ADD CONSTRAINT sis_courses_within_cred_pk PRIMARY KEY(credential#, course_code);
+
+ALTER TABLE sis_courses_within_cred
+ADD CONSTRAINT sis_courses_within_cred_credential#_fk FOREIGN KEY(credential#)
+    REFERENCES sis_Credential (credential#);
+
+ALTER TABLE sis_courses_within_cred
+ADD CONSTRAINT sis_courses_within_cred_course_code_fk FOREIGN KEY(course_code)
+    REFERENCES sis_course (course_code);
+
+ALTER TABLE sis_courses_within_cred
+ADD CONSTRAINT sis_courses_within_cred_type_flag_ck CHECK (type_flag IN (0, 1));
 
 
 CREATE TABLE sis_student_credential
